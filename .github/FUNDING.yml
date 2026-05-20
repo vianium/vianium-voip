@@ -1,0 +1,12 @@
+﻿# .github/FUNDING.yml — Vianium org standard
+# Displays the "Sponsor" button on the repository page.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
+#
+# Keep this file in sync across every repo by re-running
+# tools/Apply-CommunityFiles.ps1. Per-repo customisation lives in this
+# template only; adding a platform here propagates everywhere.
+
+github: vianium
+buy_me_a_coffee: angelcareaga
+custom:
+  - https://angelcareaga.com

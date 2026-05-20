@@ -1,0 +1,151 @@
+﻿# GitHub Actions CI - Vianium vianium-voip
+#
+# Lint-style gate that runs on every push and PR. The heavy native build
+# (v120_wp81 toolset, WP 8.1 SDK) is NOT runnable on hosted GitHub
+# runners, so we cover the cheap pre-build invariants here:
+#
+#   * SPDX-License-Identifier on every first-party source file
+#   * Required community files present (LICENSE, NOTICE, README,
+#     CONTRIBUTING, SECURITY, SUPPORT, FUNDING)
+#   * No stale email or wrong-license headers
+#   * No secret tokens / private API keys committed
+#
+# Local maintainer build expectations live in
+#   vianium-docs/getting-started.md
+# and the per-repo Building section.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  community-files:
+    name: Community files present
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Required root files
+        run: |
+          for f in LICENSE NOTICE README.md CONTRIBUTING.md CODE_OF_CONDUCT.md SECURITY.md SUPPORT.md CHANGELOG.md; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::missing required community file"
+              exit 1
+            fi
+          done
+
+      - name: Required .github files
+        run: |
+          for f in .github/FUNDING.yml .github/CODEOWNERS .github/PULL_REQUEST_TEMPLATE.md .github/ISSUE_TEMPLATE/config.yml; do
+            if [ ! -f "$f" ]; then
+              echo "::error file=$f::missing required .github file"
+              exit 1
+            fi
+          done
+
+  spdx-headers:
+    name: SPDX headers present
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Every first-party source file carries SPDX-License-Identifier
+        shell: bash
+        run: |
+          set -e
+          missing=$(find . -type f \( -name '*.cs' -o -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) \
+            -not -path './_references/*' \
+            -not -path './third_party/*' \
+            -not -path './LICENSES/*' \
+            -not -path './bin/*' \
+            -not -path './obj/*' \
+            -not -path './packages/*' \
+            -not -path './.git/*' \
+            | xargs grep -L 'SPDX-License-Identifier' 2>/dev/null || true)
+          if [ -n "$missing" ]; then
+            echo "::error::Files missing SPDX-License-Identifier header:"
+            echo "$missing" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "All sampled first-party sources carry SPDX-License-Identifier."
+
+      - name: Every first-party source file carries the Vianium copyright line
+        shell: bash
+        run: |
+          set -e
+          # The canonical form is exactly:
+          #   SPDX-FileCopyrightText: 2026 Angel Careaga <hello@angelcareaga.com>
+          # We just require the substring "Angel Careaga" + "angelcareaga.com"
+          # to absorb future year/email-form drift without nightly CI failure.
+          missing=$(find . -type f \( -name '*.cs' -o -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) \
+            -not -path './_references/*' \
+            -not -path './third_party/*' \
+            -not -path './LICENSES/*' \
+            -not -path './bin/*' \
+            -not -path './obj/*' \
+            -not -path './packages/*' \
+            -not -path './.git/*' \
+            | while read -r f; do
+              if ! head -n 5 "$f" | grep -q 'Angel Careaga'; then
+                echo "$f"
+              fi
+            done)
+          if [ -n "$missing" ]; then
+            echo "::error::Files missing Angel Careaga copyright attribution:"
+            echo "$missing" | sed 's/^/  /'
+            exit 1
+          fi
+          echo "All sampled first-party sources carry the Vianium copyright."
+
+  no-stale-email:
+    name: No stale Angel email (double-a)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reject the legacy double-a gmail address
+        shell: bash
+        run: |
+          set -e
+          stale=$(grep -RIn 'angelcaareaga' --include='*.cs' --include='*.cpp' --include='*.h' --include='*.md' . 2>/dev/null || true)
+          if [ -n "$stale" ]; then
+            echo "::error::Stale double-a email detected (must be hello@angelcareaga.com):"
+            echo "$stale"
+            exit 1
+          fi
+
+  secret-tokens:
+    name: No raw secret tokens
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reject obvious committed secrets
+        shell: bash
+        run: |
+          set -e
+          hits=$(grep -RInE \
+            -e 'AKIA[0-9A-Z]{16}' \
+            -e 'AIza[0-9A-Za-z_-]{35}' \
+            -e 'ghp_[0-9A-Za-z]{36,}' \
+            -e 'github_pat_[0-9A-Za-z_]{40,}' \
+            -e '-----BEGIN (RSA|EC|OPENSSH|PGP|DSA) PRIVATE KEY-----' \
+            --exclude-dir=.git \
+            --exclude-dir=node_modules \
+            --exclude-dir=_references \
+            --exclude-dir=third_party \
+            --exclude='*.lock' \
+            . 2>/dev/null || true)
+          if [ -n "$hits" ]; then
+            echo "::error::Possible committed secrets detected; rotate and remove:"
+            echo "$hits"
+            exit 1
+          fi

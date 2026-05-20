@@ -1,0 +1,25 @@
+vianium-voip
+Copyright 2026 Angel Careaga <hello@angelcareaga.com>
+https://github.com/AngelCareaga
+
+Required Notice: vianium-voip is authored and maintained by Angel Careaga as part of the Vianium project (https://github.com/vianium).
+
+This product is part of the Vianium project.
+https://github.com/vianium
+
+Licensed under the Apache License 2.0.
+See LICENSE for the full license text.
+
+Author and primary maintainer:
+  Angel Careaga <hello@angelcareaga.com>
+  https://github.com/AngelCareaga
+
+For security issues, see SECURITY.md.
+For contributing, see CONTRIBUTING.md.
+
+================================================================================
+THIRD-PARTY NOTICES
+
+If this repository vendors third-party code, those components retain their
+original licenses. See THIRD_PARTY_NOTICES.md (if present) for the catalog.
+================================================================================

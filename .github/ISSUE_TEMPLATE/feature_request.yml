@@ -1,0 +1,55 @@
+﻿name: Feature request
+description: Suggest an addition or improvement to this Vianium component.
+title: "[Feature] "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your idea. Before opening, please skim the
+        [ROADMAP.md](../ROADMAP.md) (if present) — your feature may
+        already be planned.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the user need or pain point. Avoid jumping to a solution here.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: How would you like this component to behave? Optionally include API sketches.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other approaches you've thought about and why they were rejected.
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: Is this an internal-API change, a public-API change, or a behaviour change?
+      options:
+        - Internal refactor
+        - New public API
+        - Breaking public API change
+        - Behaviour change (no API change)
+        - Documentation only
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I checked ROADMAP.md (if present) and existing issues for duplicates.
+          required: true

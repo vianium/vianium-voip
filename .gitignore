@@ -1,0 +1,74 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.VC.db
+*.VC.opendb
+*.opensdf
+*.sdf
+*.ncb
+*.opendb
+*.aps
+
+# Build outputs
+[Bb]in/
+[Oo]bj/
+Debug/
+Release/
+x64/
+x86/
+ARM/
+ARM64/
+Win32/
+Generated Files/
+
+# Native artifacts
+*.obj
+*.pch
+*.pdb
+*.ipdb
+*.iobj
+*.ilk
+*.lib
+*.exp
+*.dll
+*.exe
+*.idb
+*.tlog
+*.lastbuildstate
+*.recipe
+*.log
+
+# .NET / NuGet
+packages/
+*.nupkg
+project.lock.json
+project.assets.json
+TestResults/
+coverage/
+
+# Local tooling
+.env
+.env.*
+*.local
+*.tmp
+*.bak
+
+# OS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Third-party vendored sources: the rules above (x86/, ARM/, Win32/) would
+# otherwise eat libopus's SIMD subdirectories (celt/x86, silk/arm,
+# silk/fixed/arm, etc.). Force them back in so the vendor tree is complete.
+!third_party/libopus/**
+# But still drop the per-config MSVC build leftovers if any get created
+# inside the vendor tree by accident.
+third_party/libopus/**/Debug/
+third_party/libopus/**/Release/
+third_party/libopus/**/*.obj
+third_party/libopus/**/*.pdb
+third_party/libopus/**/*.tlog

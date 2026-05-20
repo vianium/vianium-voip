@@ -1,0 +1,11 @@
+﻿blank_issues_enabled: false
+contact_links:
+  - name: Security disclosure
+    url: https://github.com/vianium/vianium-voip/security/policy
+    about: Vulnerabilities go through the responsible-disclosure channel in SECURITY.md, NOT through public issues.
+  - name: Discussion / question
+    url: https://github.com/vianium/vianium-voip/discussions
+    about: For open-ended questions, design discussions, or "how do I…" use Discussions instead of a tracker issue.
+  - name: Commercial licensing
+    url: https://angelcareaga.com
+    about: For Tier 3 (PolyForm-Noncommercial) products that require a commercial license, contact hello@angelcareaga.com.

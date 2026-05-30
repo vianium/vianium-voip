@@ -101,7 +101,8 @@
            The path uses the solution-centralised OutDir; the per-repo
            fallback is included for cmd-line builds without the .sln.
            TlsPrf::Compute is dllimport via VIANIUM_TLS_PRF_API. -->
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\Vianium.Core.Tls\;$(SolutionDir)$(Platform)\$(Configuration)\Vianium.Core.Tls\;$(ProjectDir)..\vianium-tls\$(Configuration)\Vianium.Core.Tls\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)'=='ARM'">$(SolutionDir)$(Platform)\$(Configuration)\Vianium.Core.Tls\;$(ProjectDir)..\vianium-tls\$(Platform)\$(Configuration)\Vianium.Core.Tls\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)'!='ARM'">$(SolutionDir)$(Configuration)\Vianium.Core.Tls\;$(ProjectDir)..\vianium-tls\$(Configuration)\Vianium.Core.Tls\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>mmdevapi.lib;runtimeobject.lib;Vianium.Tls.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateWindowsMetadata>true</GenerateWindowsMetadata>
     </Link>
